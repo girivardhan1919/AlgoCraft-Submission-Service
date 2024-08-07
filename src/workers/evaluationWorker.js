@@ -1,6 +1,7 @@
 const { Worker } = require('bullmq');
 const redisConnection = require('../config/redisConfig');
 const axios = require('axios');
+const {Submission} = require('../models/submissionModel');
 
 function evaluationWorker(queue) {
   new Worker('EvaluationQueue', async job => {
@@ -13,6 +14,15 @@ function evaluationWorker(queue) {
         })
         console.log(response);
         console.log(job.data);
+
+        /* //get the evalaution status
+        const status = job.data.response.status;
+        // Update the status in the submission collection
+        await Submission.updateOne(
+          { userId: job.data.userId, problemId: job.data.problemId },
+          { status: status }
+        ); */
+
       } catch (error) {
         console.log(error)
       }
